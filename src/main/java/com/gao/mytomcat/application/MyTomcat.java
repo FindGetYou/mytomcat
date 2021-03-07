@@ -21,11 +21,19 @@ public class MyTomcat {
     public MyTomcat(int port){
         this.port = port;
     }
+
+    /**
+     * 初始化服务表
+     */
     public void initServletMap(){
         for(ServletEntity servlet : ServletMappingConfig.servletList){
             servletMap.put(servlet.getUrl(),servlet.getClazzName());
         }
     }
+
+    /**
+     * 在对应端口启动mytomcat，使用socket
+     */
     public void start(){
         initServletMap();
         ServerSocket serverSocket = null;
@@ -58,6 +66,12 @@ public class MyTomcat {
             }
         }
     }
+
+    /**
+     * 派遣请求掉对应的servlet，反射机制
+     * @param myRequest
+     * @param myResponse
+     */
     public void dispatch(MyRequest myRequest,MyResponse myResponse){
         try{
             Class<MyServlet> servletClass = (Class<MyServlet>)Class.forName(servletMap.get(myRequest.getUrl()));
